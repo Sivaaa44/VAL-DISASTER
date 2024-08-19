@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="author" content="val" />
+    <meta
+      name="description"
+      content="This site helps to manage resources and volunteer activities during disasters"
+    />
+
+    <link rel="icon" href="/img/valicon.jpg" type="image/x-icon" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+
+    <title>Val - Select Role</title>
+    <style>
+      :root {
+        --primary-color: #3498db;
+        --secondary-color: #2c3e50;
+        --background-color: #ecf0f1;
+        --text-color: #34495e;
+        --sidebar-width: 250px;
+        --sidebar-background: #2c3e50;
+        --sidebar-text: #ecf0f1;
+        --sidebar-hover: #34495e;
+      }
+
+      body {
+        font-family: "Roboto", Arial, sans-serif;
+        line-height: 1.6;
+        margin: 0;
+        padding: 0;
+        background-color: var(--background-color);
+        color: var(--text-color);
+        display: flex;
+      }
+
+      main {
+        flex-grow: 1;
+        padding: 40px;
+        margin-left: var(--sidebar-width);
+        margin-left: 0;
+        padding: 20px;
+        position: relative;
+        left: 30px;
+        top: 490px;
+      }
+
+      h1 {
+        color: var(--primary-color);
+        margin-bottom: 30px;
+        text-align: center;
+      }
+
+      .role-buttons {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .role-button {
+        background-color: var(--primary-color);
+        color: white;
+        padding: 15px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 18px;
+        transition: all 0.3s ease;
+        width: 180px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .role-button:hover {
+        background-color: #2980b9;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      }
+
+      .role-button:active {
+        transform: translateY(1px);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      }
+
+      .role-button::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 5px;
+        height: 5px;
+        background: rgba(255, 255, 255, 0.5);
+        opacity: 0;
+        border-radius: 100%;
+        transform: scale(1, 1) translate(-50%);
+        transform-origin: 50% 50%;
+      }
+
+      @keyframes ripple {
+        0% {
+          transform: scale(0, 0);
+          opacity: 1;
+        }
+        20% {
+          transform: scale(25, 25);
+          opacity: 1;
+        }
+        100% {
+          opacity: 0;
+          transform: scale(40, 40);
+        }
+      }
+
+      .role-button.selected {
+        background-color: #27ae60;
+      }
+
+      .role-button.selected:hover {
+        background-color: #219952;
+      }
+
+      .custom-alert {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        align-items: center;
+        justify-content: center;
+      }
+
+      .alert-content {
+        background-color: white;
+        padding: 20px;
+        border-radius: 5px;
+        text-align: center;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        max-width: 300px;
+        width: 100%;
+      }
+
+      #alert-message {
+        margin-bottom: 20px;
+        color: var(--text-color);
+      }
+
+      #alert-close {
+        background-color: var(--primary-color);
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+
+      #alert-close:hover {
+        background-color: var(--secondary-color);
+      }
+
+      @media (max-width: 768px) {
+        body {
+          flex-direction: column;
+        }
+
+        .sidebar {
+          width: 100%;
+          height: auto;
+          position: static;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main id="main">
+      <h1>Select Your Role</h1>
+      <div class="role-buttons">
+        <button
+          class="role-button"
+          onclick="selectRole(this)"
+          data-href="/html/contribute.html"
+        >
+          Donor
+        </button>
+        <button
+          class="role-button"
+          onclick="selectRole(this)"
+          data-href="/html/request.html"
+        >
+          Help
+        </button>
+        <button
+          class="role-button"
+          onclick="selectRole(this)"
+          data-href="/html/volunteer.html"
+        >
+          Volunteer
+        </button>
+      </div>
+    </main>
+
+    <div id="custom-alert" class="custom-alert">
+      <div class="alert-content">
+        <p id="alert-message"></p>
+        <button id="alert-close">OK</button>
+      </div>
+    </div>
+
+    <script>
+      function createRipple(event) {
+        const button = event.currentTarget;
+        const circle = document.createElement("span");
+        const diameter = Math.max(button.clientWidth, button.clientHeight);
+        const radius = diameter / 2;
+
+        circle.style.width = circle.style.height = `${diameter}px`;
+        circle.style.left = `${event.clientX - button.offsetLeft - radius}px`;
+        circle.style.top = `${event.clientY - button.offsetTop - radius}px`;
+        circle.classList.add("ripple");
+
+        const ripple = button.getElementsByClassName("ripple")[0];
+
+        if (ripple) {
+          ripple.remove();
+        }
+
+        button.appendChild(circle);
+      }
+
+      function showCustomAlert(message) {
+        const alertElement = document.getElementById("custom-alert");
+        const messageElement = document.getElementById("alert-message");
+        const closeButton = document.getElementById("alert-close");
+
+        messageElement.textContent = message;
+        alertElement.style.display = "flex";
+
+        return new Promise((resolve) => {
+          closeButton.onclick = function () {
+            alertElement.style.display = "none";
+            resolve();
+          };
+        });
+      }
+
+      function selectRole(button) {
+        document.querySelectorAll(".role-button").forEach((btn) => {
+          btn.classList.remove("selected");
+        });
+
+        button.classList.add("selected");
+        createRipple(event);
+
+        const selectedRole = button.textContent.trim();
+        localStorage.setItem("selectedRole", selectedRole);
+
+        setTimeout(async () => {
+          await showCustomAlert(`You have selected the role: ${selectedRole}`);
+          location.href = button.getAttribute("data-href");
+        }, 300);
+      }
+
+      window.addEventListener("load", () => {
+        const selectedRole = localStorage.getItem("selectedRole");
+        if (selectedRole) {
+          document.querySelectorAll(".role-button").forEach((btn) => {
+            if (btn.textContent.trim() === selectedRole) {
+              btn.classList.add("selected");
+            }
+          });
+        }
+
+        // Add event listeners for ripple effect
+        const buttons = document.getElementsByClassName("role-button");
+        for (const button of buttons) {
+          button.addEventListener("click", createRipple);
+        }
+      });
+    </script>
+  </body>
+</html>

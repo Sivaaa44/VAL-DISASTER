@@ -1,0 +1,671 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="author" content="val" />
+    <meta
+      name="description"
+      content="this site helps to manage resourses and volunteer activities during disaster"
+    />
+
+    <link rel="icon" href="/img/valicon.jpg" type="image/x-icon" />
+
+    <link rel="stylesheet" href="/css/volunteer.css" type="text/css" />
+
+    <title>Val</title>
+  </head>
+  <body>
+    <header>
+      <nav class="navbar">
+        <ul>
+          <li>
+            <a href="/html/home.html">Home</a>
+          </li>
+          <li>
+            <a href="/html/role.html">Select role</a>
+          </li>
+
+          <li>
+            <a href="/html/contribute.html">Contribute Resourses</a>
+          </li>
+          <li>
+            <a href="/html/request.html">Request Help</a>
+          </li>
+          <li>
+            <a href="/html/volunteer.html">Volunteer Registration</a>
+          </li>
+          <li>
+            <a href="/html/ngo.html">NGO List</a>
+          </li>
+          <li>
+            <a href="/html/dashboard.html">Dashboard</a>
+          </li>
+        </ul>
+      </nav>
+    </header>
+    <main>
+      <div class="heading">
+        <h1>Volunteer Contribution</h1>
+        <p>
+          Please fill out the below form to help and volunteer the people in the
+          affected areas.
+        </p>
+      </div>
+      <form>
+        <div class="first">
+      <label for="firstname">First Name</label></div>
+      <input
+        type="text"
+        name="firstname"
+        id="firstname"
+        autocomplete="on"
+        required
+        autofocus
+      />
+      <div class="second">
+      <label for="secondname">Second Name</label>
+    </div>
+      <input
+        type="text"
+        name="secondname"
+        id="secondname"
+        autocomplete="on"
+        autofocus
+      />
+      <div class="Age">
+        <label for="age">Age</label>
+      </div>
+      <input
+        type="number"
+        name="age"
+        id="age"
+        min="1"
+        max="100"
+        placeholder="18"
+        required
+      />
+    </div>
+    <div class="locate">
+      <label for="location">Select Location</label>
+    </div>
+    <input
+      type="text"
+      name="location"
+      id="location"
+      list="location-list"
+      placeholder="Location"
+      required
+    />
+    <datalist id="location-list">
+      <option value="Adyar"></option>
+      <option value="porur"></option>
+      <option value="perumbur"></option>
+
+      <option value="chrompet"></option>
+      <option value="royapuram"></option>
+      <option value="todiarpet"></option>
+      <option value="anna nagar"></option>
+      <option value="velacherry"></option>
+      <option value="Tnagar"></option>
+    </datalist>
+  </div>
+  <div class="phoneno">
+  <label for="phone">Phone No</label>
+</div>
+  <input type="tel" name="phone" id="phone" placeholder="**********"
+  pattern="[0-9]{3}[0-9]{3}[0-9]{4}" required>
+<div>
+  <div class="mail">
+  <label for="email">Email</label></div>
+  <input type="email" id="email" name="email" placeholder="name@gmail.com">
+
+</div>
+</form>   
+<button class="buttonsubmit">Submit</button> 
+<button class="buttonreset">Reset</button>
+    </main>
+  </body>
+</html>-->
+
+<!--claude-->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="author" content="val" />
+    <meta
+      name="description"
+      content="This site helps to manage resources and volunteer activities during disasters"
+    />
+    <link rel="icon" href="/img/valicon.jpg" type="image/x-icon" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
+    />
+    <title>VAL - Volunteer Registration</title>
+    <style>
+      :root {
+        --primary-color: #3498db;
+        --secondary-color: #2c3e50;
+        --background-color: #f4f7f9;
+        --text-color: #34495e;
+        --accent-color: #e74c3c;
+        --success-color: #2ecc71;
+        --sidebar-width: 250px;
+        --sidebar-bg-color: #2c3e50;
+        --sidebar-text-color: #ecf0f1;
+        --sidebar-hover-bg: #34495e;
+        --transition-speed: 0.3s;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: "Poppins", sans-serif;
+        line-height: 1.6;
+        color: var(--text-color);
+        background-color: var(--background-color);
+        display: flex;
+      }
+
+      .sidebar {
+        width: var(--sidebar-width);
+        height: 100vh;
+        background-color: var(--sidebar-bg-color);
+        color: var(--sidebar-text-color);
+        position: fixed;
+        left: 0;
+        top: 0;
+        overflow-y: auto;
+        transition: width var(--transition-speed) ease;
+      }
+
+      .sidebar-header {
+        padding: 1.5rem;
+        background: linear-gradient(
+          135deg,
+          var(--primary-color),
+          var(--secondary-color)
+        );
+      }
+
+      .sidebar-title {
+        text-align: center;
+        font-size: 1.5rem;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin: 0;
+      }
+
+      .sidebar-list {
+        list-style-type: none;
+        padding: 1rem 0;
+      }
+
+      .sidebar-item {
+        padding: 0.5rem 1.5rem;
+        transition: background-color var(--transition-speed) ease;
+      }
+
+      .sidebar-item:hover {
+        background-color: var(--sidebar-hover-bg);
+      }
+
+      .sidebar-link {
+        color: var(--sidebar-text-color);
+        text-decoration: none;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        padding: 0.75rem 0;
+        transition: all var(--transition-speed) ease;
+      }
+
+      .sidebar-link i {
+        margin-right: 10px;
+        font-size: 1.2rem;
+        width: 25px;
+        text-align: center;
+      }
+
+      main {
+        margin-left: var(--sidebar-width);
+        flex-grow: 1;
+        padding: 40px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background-color: #f0f0f0; /* Light gray background for contrast */
+      }
+
+      .heading {
+        text-align: center;
+        margin-bottom: 40px;
+      }
+
+      h1 {
+        color: var(--primary-color);
+        font-size: 2.5rem;
+        margin-bottom: 10px;
+      }
+
+      form {
+        display: grid;
+        gap: 25px;
+        max-width: 600px;
+        width: 100%;
+        margin: 0 auto;
+        background-color: #ffffff; /* White background */
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        border: 1px solid #e0e0e0;
+      }
+      .form-group {
+        display: flex;
+        flex-direction: column;
+      }
+
+      label {
+        font-weight: 600;
+        margin-bottom: 8px;
+        color: var(--secondary-color);
+      }
+
+      input,
+      select {
+        width: 100%;
+        padding: 12px;
+        border: 2px solid #e0e0e0;
+        border-radius: 6px;
+        font-size: 16px;
+        transition: all 0.3s ease;
+      }
+
+      input:focus,
+      select:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+      }
+
+      button {
+        background-color: var(--primary-color);
+        color: white;
+        padding: 14px 24px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 18px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      button:hover {
+        background-color: var(--secondary-color);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      }
+
+      #ngo-list {
+        margin-top: 20px;
+        border: 2px solid #e0e0e0;
+        padding: 20px;
+        border-radius: 8px;
+        background-color: #f9f9f9;
+        transition: all 0.3s ease;
+      }
+
+      #ngo-list h2 {
+        color: var(--primary-color);
+        margin-bottom: 15px;
+        font-size: 1.2em;
+      }
+
+      #ngo-list ul {
+        list-style-type: none;
+      }
+
+      #ngo-list li {
+        margin-bottom: 10px;
+        padding: 10px;
+        background-color: white;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      #ngo-list li:hover {
+        background-color: #e6f3ff;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      #selected-ngo {
+        margin-top: 20px;
+        font-weight: bold;
+        color: var(--primary-color);
+        padding: 10px;
+        background-color: #e6f3ff;
+        border-radius: 6px;
+        text-align: center;
+      }
+
+      .hidden {
+        display: none;
+      }
+
+      @media (max-width: 768px) {
+        body {
+          flex-direction: column;
+        }
+
+        .sidebar {
+          width: 100%;
+          height: auto;
+          position: static;
+        }
+
+        main {
+          margin-left: 0;
+          padding: 20px;
+        }
+
+        h1 {
+          font-size: 2rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <h2 class="sidebar-title">VAL</h2>
+      </div>
+      <nav>
+        <ul class="sidebar-list">
+          <li class="sidebar-item">
+            <a href="/html/map.html" class="sidebar-link">
+              <i class="fas fa-map"></i>
+              <span>&nbsp;&nbsp;HeatMap</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="/html/home.html" class="sidebar-link">
+              <i class="fas fa-home"></i>
+              <span>&nbsp;&nbsp;Home</span>
+            </a>
+          </li>
+
+          <li class="sidebar-item">
+            <a href="/html/contribute.html" class="sidebar-link">
+              <i class="fas fa-hands-helping"></i>
+              <span>&nbsp;&nbsp;Contribute Resources</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="/html/request.html" class="sidebar-link">
+              <i class="fas fa-hand-holding-heart"></i>
+              <span>&nbsp;&nbsp;Request Help</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="/html/volunteer.html" class="sidebar-link">
+              <i class="fas fa-user-friends"></i>
+              <span>&nbsp;Volunteer Registration</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="/html/ngo.html" class="sidebar-link">
+              <i class="fas fa-building"></i>
+              <span>&nbsp;&nbsp;NGO List</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="/html/dashboard.html" class="sidebar-link">
+              <i class="fas fa-tachometer-alt"></i>
+              <span>&nbsp;&nbsp;Dashboard</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+
+    <main>
+      <!-- ... (rest of the main content remains unchanged) ... -->
+      <section class="heading">
+        <h1>Volunteer Contribution</h1>
+        <p>
+          Please fill out the form below to help and volunteer for people in the
+          affected areas.
+        </p>
+      </section>
+
+      <form id="volunteerForm">
+        <div class="form-group">
+          <label for="firstname">First Name</label>
+          <input
+            type="text"
+            name="firstname"
+            id="firstname"
+            autocomplete="given-name"
+            required
+            autofocus
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="lastname">Last Name</label>
+          <input
+            type="text"
+            name="lastname"
+            id="lastname"
+            autocomplete="family-name"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="age">Age</label>
+          <input
+            type="number"
+            name="age"
+            id="age"
+            min="18"
+            max="100"
+            placeholder="18"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="location">Select Location</label>
+          <select name="location" id="location" required>
+            <option value="">Select a location</option>
+            <option value="Adyar">Adyar</option>
+            <option value="Porur">Porur</option>
+            <option value="Perambur">Perambur</option>
+            <option value="Chrompet">Chrompet</option>
+            <option value="Royapuram">Royapuram</option>
+            <option value="Tondiarpet">Tondiarpet</option>
+            <option value="Anna Nagar">Anna Nagar</option>
+            <option value="Velachery">Velachery</option>
+            <option value="T Nagar">T Nagar</option>
+          </select>
+        </div>
+
+        <div id="ngo-list" class="hidden">
+          <h2>NGOs in the selected area:</h2>
+          <ul id="ngo-list-items"></ul>
+        </div>
+
+        <div class="form-group">
+          <label for="phone">Phone Number</label>
+          <input
+            type="tel"
+            name="phone"
+            id="phone"
+            placeholder="Enter your phone number"
+            pattern="[0-9]{10}"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            placeholder="name@example.com"
+          />
+        </div>
+
+        <div id="selected-ngo" class="hidden"></div>
+
+        <div class="form-actions">
+          <button type="submit">Submit</button>
+          <button type="reset">Reset</button>
+        </div>
+      </form>
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/js/all.min.js"></script>
+    <script>
+      const ngoData = {
+        Adyar: [
+          { name: "Adyar Eco Park Trust", phone: "044-2446-1234" },
+          { name: "Adyar Cancer Institute", phone: "044-2209-1950" },
+        ],
+        Porur: [
+          { name: "Porur Lake Restoration Trust", phone: "044-2476-5678" },
+          { name: "Porur Community Welfare Association", phone: "044-2476-8765" },
+        ],
+        Perambur: [
+          { name: "Perambur Social Service Society", phone: "044-2621-4321" },
+          { name: "Perambur Railway Employees Association", phone: "044-2621-8765" },
+        ],
+        Chrompet: [
+          { name: "Chrompet Citizens Welfare Association", phone: "044-2239-1234" },
+          { name: "Chrompet Environmental Society", phone: "044-2239-5678" },
+        ],
+        Royapuram: [
+          { name: "Royapuram Fishermen Cooperative", phone: "044-2595-8765" },
+          { name: "Royapuram Youth Welfare Association", phone: "044-2595-4321" },
+        ],
+        Tondiarpet: [
+          { name: "Tondiarpet Residents Welfare Association", phone: "044-2592-1234" },
+          { name: "Tondiarpet Women Empowerment Society", phone: "044-2592-5678" },
+        ],
+        "Anna Nagar": [
+          { name: "Anna Nagar Rotary Club", phone: "044-2626-8765" },
+          { name: "Anna Nagar West Extension Welfare Association", phone: "044-2626-4321" },
+        ],
+        Velachery: [
+          { name: "Velachery Lake Restoration Group", phone: "044-2243-1234" },
+          { name: "Velachery Social Welfare Trust", phone: "044-2243-5678" },
+        ],
+        "T Nagar": [
+          { name: "T Nagar Residents Welfare Association", phone: "044-2434-8765" },
+          { name: "T Nagar Cultural Association", phone: "044-2434-4321" },
+        ],
+      };
+    
+      let selectedNGO = null;
+    
+      document.addEventListener("DOMContentLoaded", () => {
+        const locationSelect = document.getElementById("location");
+        const ngoList = document.getElementById("ngo-list-items");
+        const ngoListContainer = document.getElementById("ngo-list");
+        const volunteerForm = document.getElementById("volunteerForm");
+    
+        locationSelect.addEventListener("change", updateNGOList);
+        volunteerForm.addEventListener("submit", handleFormSubmit);
+    
+        function updateNGOList() {
+          const selectedLocation = locationSelect.value;
+          ngoList.innerHTML = "";
+          selectedNGO = null;
+          updateSelectedNGODisplay();
+    
+          if (ngoData[selectedLocation]) {
+            ngoData[selectedLocation].forEach((ngo) => {
+              const li = document.createElement("li");
+              li.textContent = `${ngo.name} - ${ngo.phone}`;
+              li.addEventListener("click", () => selectNGO(ngo, li));
+              ngoList.appendChild(li);
+            });
+            ngoListContainer.classList.remove("hidden");
+          } else {
+            ngoListContainer.classList.add("hidden");
+          }
+        }
+    
+        function selectNGO(ngo, element) {
+          selectedNGO = ngo;
+          updateSelectedNGODisplay();
+          ngoList.querySelectorAll("li").forEach((item) => item.classList.remove("selected"));
+          element.classList.add("selected");
+        }
+    
+        function updateSelectedNGODisplay() {
+          const selectedNGOElement = document.getElementById("selected-ngo");
+          if (selectedNGO) {
+            selectedNGOElement.textContent = `Selected NGO: ${selectedNGO.name}`;
+            selectedNGOElement.classList.remove("hidden");
+          } else {
+            selectedNGOElement.textContent = "";
+            selectedNGOElement.classList.add("hidden");
+          }
+        }
+    
+        async function handleFormSubmit(e) {
+          e.preventDefault();
+          if (!selectedNGO) {
+            alert("Please select an NGO before submitting the form.");
+            return;
+          }
+          const formData = new FormData(volunteerForm);
+          formData.append("selectedNGO", JSON.stringify(selectedNGO));
+          const volunteerData = Object.fromEntries(formData);
+    
+          try {
+            const response = await fetch('http://127.0.0.1:8000/api/volunteer', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(volunteerData),
+            });
+            if (response.ok) {
+              alert("Form submitted successfully!");
+              volunteerForm.reset();
+              selectedNGO = null;
+              updateSelectedNGODisplay();
+              ngoListContainer.classList.add("hidden");
+            } else {
+              throw new Error("Form submission failed");
+            }
+          } catch (error) {
+            console.error("Error submitting form:", error);
+            alert("An error occurred while submitting the form. Please try again.");
+          }
+        }
+      });
+    </script>
+    
+  </body>
+</html>

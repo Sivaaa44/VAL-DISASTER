@@ -1,0 +1,453 @@
+<!--<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="author" content="val" />
+    <meta
+      name="description"
+      content="this site helps to manage resourses and volunteer activities during disaster"
+    />
+
+    <link rel="icon" href="/img/valicon.jpg" type="image/x-icon" />
+
+    <link rel="stylesheet" href="/css/ngo.css" type="text/css" />
+
+    <title>Val</title>
+  </head>
+  <body>
+    <header>
+      <nav class="navbar">
+        <ul>
+          <li>
+            <a href="/html/home.html">Home</a>
+          </li>
+          <li>
+            <a href="/html/role.html">Select role</a>
+          </li>
+
+          <li>
+            <a href="/html/contribute.html">Contribute Resourses</a>
+          </li>
+          <li>
+            <a href="/html/request.html">Request Help</a>
+          </li>
+          <li>
+            <a href="/html/volunteer.html">Volunteer Registration</a>
+          </li>
+          <li>
+            <a href="/html/ngo.html">NGO List</a>
+          </li>
+          <li>
+            <a href="/html/dashboard.html">Dashboard</a>
+          </li>
+        </ul>
+      </nav>
+    </header>
+  </body>
+</html>-->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="author" content="val" />
+    <meta
+      name="description"
+      content="List of NGOs in various locations for disaster management"
+    />
+    <link rel="icon" href="/img/valicon.jpg" type="image/x-icon" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
+    />
+    <title>Val - NGO List</title>
+    <style>
+      :root {
+        --primary-color: #3498db;
+        --secondary-color: #2c3e50;
+        --background-color: #f4f7f9;
+        --text-color: #34495e;
+        --accent-color: #e74c3c;
+        --sidebar-width: 250px;
+        --sidebar-bg-color: #2c3e50;
+        --sidebar-text-color: #ecf0f1;
+        --sidebar-hover-bg: #34495e;
+        --transition-speed: 0.3s;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Poppins", sans-serif;
+        line-height: 1.6;
+        background-color: var(--background-color);
+        color: var(--text-color);
+        display: flex;
+      }
+
+      .sidebar {
+        width: var(--sidebar-width);
+        height: 100vh;
+        background-color: var(--sidebar-bg-color);
+        color: var(--sidebar-text-color);
+        position: fixed;
+        left: 0;
+        top: 0;
+        overflow-y: auto;
+        transition: width var(--transition-speed) ease;
+      }
+
+      .sidebar-header {
+        padding: 1.5rem;
+        background: linear-gradient(
+          135deg,
+          var(--primary-color),
+          var(--secondary-color)
+        );
+      }
+
+      .sidebar-title {
+        color: var(--sidebar-text-color);
+        text-align: center;
+        font-size: 1.5rem;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin: 0;
+      }
+
+      .sidebar-list {
+        list-style-type: none;
+        padding: 1rem 0;
+      }
+
+      .sidebar-item {
+        padding: 0.5rem 1.5rem;
+        transition: background-color var(--transition-speed) ease;
+      }
+
+      .sidebar-item:hover {
+        background-color: var(--sidebar-hover-bg);
+      }
+
+      .sidebar-link {
+        color: var(--sidebar-text-color);
+        text-decoration: none;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        padding: 0.75rem 0;
+        transition: all var(--transition-speed) ease;
+      }
+
+      .sidebar-link i {
+        margin-right: 10px;
+        font-size: 1.2rem;
+        width: 25px;
+        text-align: center;
+      }
+
+      main {
+        margin-left: calc(var(--sidebar-width) + 30px);
+        max-width: calc(100% - var(--sidebar-width) - 60px);
+        width: 100%;
+        padding: 30px;
+      }
+
+      h1 {
+        color: var(--primary-color);
+        text-align: center;
+        margin-bottom: 30px;
+        font-size: 2.5em;
+      }
+
+      .location {
+        margin-bottom: 40px;
+      }
+
+      .location h2 {
+        color: var(--secondary-color);
+        border-bottom: 2px solid var(--primary-color);
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+        font-size: 1.8em;
+      }
+
+      .ngo-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+      }
+
+      .ngo {
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        padding: 20px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .ngo:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .ngo h3 {
+        color: var(--primary-color);
+        margin-bottom: 10px;
+        font-size: 1.3em;
+      }
+
+      .ngo p {
+        margin: 5px 0;
+        font-size: 0.9em;
+      }
+
+      .ngo p:last-child {
+        margin-top: 10px;
+        font-style: italic;
+        color: var(--accent-color);
+      }
+
+      @media (max-width: 768px) {
+        body {
+          flex-direction: column;
+        }
+
+        .sidebar {
+          width: 100%;
+          height: auto;
+          position: static;
+        }
+
+        main {
+          margin-left: 0;
+          max-width: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <h2 class="sidebar-title">VAL</h2>
+      </div>
+      <nav>
+        <ul class="sidebar-list">
+          <li class="sidebar-item">
+            <a href="/html/map.html" class="sidebar-link">
+              <i class="fas fa-map"></i>
+              <span>HeatMap</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="/html/home.html" class="sidebar-link">
+              <i class="fas fa-home"></i>
+              <span>Home</span>
+            </a>
+          </li>
+
+          <li class="sidebar-item">
+            <a href="/html/contribute.html" class="sidebar-link">
+              <i class="fas fa-hands-helping"></i>
+              <span>Contribute Resources</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="/html/request.html" class="sidebar-link">
+              <i class="fas fa-hand-holding-heart"></i>
+              <span>Request Help</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="/html/volunteer.html" class="sidebar-link">
+              <i class="fas fa-user-friends"></i>
+              <span>Volunteer Registration</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="/html/ngo.html" class="sidebar-link">
+              <i class="fas fa-building"></i>
+              <span>NGO List</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="/html/dashboard.html" class="sidebar-link">
+              <i class="fas fa-tachometer-alt"></i>
+              <span>Dashboard</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+    <main>
+      <h1>NGO List</h1>
+      <!-- NGO locations -->
+      <div class="location">
+        <h2>Adyar</h2>
+        <div class="ngo-grid">
+          <div class="ngo">
+            <h3>Adyar Cancer Institute</h3>
+            <p>Phone: 044-2209-1950</p>
+            <p>Email: info@adyarcancerinstitute.org</p>
+            <p>Specializes in cancer treatment and research</p>
+          </div>
+          <div class="ngo">
+            <h3>Adyar Eco Park Trust</h3>
+            <p>Phone: 044-2446-1234</p>
+            <p>Email: contact@adyarecopark.org</p>
+            <p>Focuses on environmental conservation and education</p>
+          </div>
+        </div>
+      </div>
+      <!-- Repeat similar structure for other locations -->
+      <!-- ... (other location sections) ... -->
+      <div class="location">
+        <h2>Anna Nagar</h2>
+        <div class="ngo-grid">
+          <div class="ngo">
+            <h3>Anna Nagar Rotary Club</h3>
+            <p>Phone: 044-2626-8765</p>
+            <p>Email: info@annagarrotary.org</p>
+            <p>Details: Community service organization</p>
+          </div>
+          <div class="ngo">
+            <h3>Anna Nagar West Extension Welfare Association</h3>
+            <p>Phone: 044-2626-4321</p>
+            <p>Email: contact@annagarwestwelfare.org</p>
+            <p>Details: Works for the welfare of local residents</p>
+          </div>
+        </div>
+      </div>
+      <div class="location">
+        <h2>Chrompet</h2>
+        <div class="ngo-grid">
+          <div class="ngo">
+            <h3>Chrompet Citizens Welfare Association</h3>
+            <p>Phone: 044-2239-1234</p>
+            <p>Email: info@chrompetcitizens.org</p>
+            <p>Details: Advocates for local community needs</p>
+          </div>
+          <div class="ngo">
+            <h3>Chrompet Environmental Society</h3>
+            <p>Phone: 044-2239-5678</p>
+            <p>Email: contact@chrompetenv.org</p>
+            <p>Details: Promotes environmental awareness and conservation</p>
+          </div>
+        </div>
+      </div>
+      <div class="location">
+        <h2>Perambur</h2>
+        <div class="ngo-grid">
+          <div class="ngo">
+            <h3>Perambur Railway Employees Association</h3>
+            <p>Phone: 044-2621-8765</p>
+            <p>Email: info@peramburailway.org</p>
+            <p>Details: Supports railway employees and their families</p>
+          </div>
+          <div class="ngo">
+            <h3>Perambur Social Service Society</h3>
+            <p>Phone: 044-2621-4321</p>
+            <p>Email: contact@perambursocial.org</p>
+            <p>Details: Provides social services to the local community</p>
+          </div>
+        </div>
+      </div>
+      <div class="location">
+        <h2>Porur</h2>
+        <div class="ngo-grid">
+          <div class="ngo">
+            <h3>Porur Community Welfare Association</h3>
+            <p>Phone: 044-2476-8765</p>
+            <p>Email: info@porurwelfare.org</p>
+            <p>Details: Works for the overall development of Porur area</p>
+          </div>
+          <div class="ngo">
+            <h3>Porur Lake Restoration Trust</h3>
+            <p>Phone: 044-2476-5678</p>
+            <p>Email: contact@porurlake.org</p>
+            <p>
+              Details: Focuses on the restoration and maintenance of Porur Lake
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="location">
+        <h2>Royapuram</h2>
+        <div class="ngo-grid">
+          <div class="ngo">
+            <h3>Royapuram Fishermen Cooperative</h3>
+            <p>Phone: 044-2595-8765</p>
+            <p>Email: info@royapuramfishermen.org</p>
+            <p>Details: Supports local fishing community</p>
+          </div>
+          <div class="ngo">
+            <h3>Royapuram Youth Welfare Association</h3>
+            <p>Phone: 044-2595-4321</p>
+            <p>Email: contact@royapuramyouth.org</p>
+            <p>Details: Focuses on youth development and empowerment</p>
+          </div>
+        </div>
+      </div>
+      <div class="location">
+        <h2>T Nagar</h2>
+        <div class="ngo-grid">
+          <div class="ngo">
+            <h3>T Nagar Cultural Association</h3>
+            <p>Phone: 044-2434-4321</p>
+            <p>Email: info@tnagarculture.org</p>
+            <p>Details: Promotes local cultural activities and events</p>
+          </div>
+          <div class="ngo">
+            <h3>T Nagar Residents Welfare Association</h3>
+            <p>Phone: 044-2434-8765</p>
+            <p>Email: contact@tnagarresidents.org</p>
+            <p>Details: Addresses civic issues and resident concerns</p>
+          </div>
+        </div>
+      </div>
+      <div class="location">
+        <h2>Tondiarpet</h2>
+        <div class="ngo-grid">
+          <div class="ngo">
+            <h3>Tondiarpet Residents Welfare Association</h3>
+            <p>Phone: 044-2592-1234</p>
+            <p>Email: info@tondiarpetresidents.org</p>
+            <p>Details: Works for the betterment of local residential areas</p>
+          </div>
+          <div class="ngo">
+            <h3>Tondiarpet Women Empowerment Society</h3>
+            <p>Phone: 044-2592-5678</p>
+            <p>Email: contact@tondiarpetwoman.org</p>
+            <p>Details: Focuses on women's rights and empowerment</p>
+          </div>
+        </div>
+      </div>
+      <div class="location">
+        <h2>Velachery</h2>
+        <div class="ngo-grid">
+          <div class="ngo">
+            <h3>Velachery Lake Restoration Group</h3>
+            <p>Phone: 044-2243-1234</p>
+            <p>Email: info@velacherylake.org</p>
+            <p>Details: Works on restoring and maintaining Velachery Lake</p>
+          </div>
+          <div class="ngo">
+            <h3>Velachery Social Welfare Trust</h3>
+            <p>Phone: 044-2243-5678</p>
+            <p>Email: contact@velacherywelfare.org</p>
+            <p>Details: Provides various social services to the community</p>
+          </div>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>

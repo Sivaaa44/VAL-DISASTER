@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="author" content="val" />
+    <meta
+      name="description"
+      content="This site helps to manage resources and volunteer activities during disasters"
+    />
+    <link rel="icon" href="/img/valicon.jpg" type="image/x-icon" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&family=Poppins:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <title>Val - Donor Contribution</title>
+    <style>
+      :root {
+        --primary-color: #3498db;
+        --secondary-color: #2c3e50;
+        --background-color: #f5f7fa;
+        --text-color: #34495e;
+        --accent-color: #e74c3c;
+        --success-color: #2ecc71;
+        --sidebar-width: 250px;
+        --sidebar-background: #2c3e50;
+        --sidebar-text: #ecf0f1;
+        --sidebar-hover: #34495e;
+        --transition-speed: 0.3s;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Roboto", Arial, sans-serif;
+        line-height: 1.6;
+        background-color: var(--background-color);
+        color: var(--text-color);
+        display: flex;
+      }
+
+      .sidebar {
+        width: var(--sidebar-width);
+        height: 100vh;
+        background-color: var(--sidebar-background);
+        position: fixed;
+        left: 0;
+        top: 0;
+        overflow-y: auto;
+      }
+
+      .sidebar-header {
+        padding: 1.5rem;
+        background: linear-gradient(
+          135deg,
+          var(--primary-color),
+          var(--secondary-color)
+        );
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .sidebar-title {
+        color: var(--sidebar-text);
+        font-size: 1.5rem;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+      }
+
+      .sidebar-list {
+        list-style-type: none;
+        padding: 1rem 0;
+      }
+
+      .sidebar-item {
+        padding: 0.5rem 1.5rem;
+        transition: background-color var(--transition-speed) ease;
+      }
+
+      .sidebar-item:hover {
+        background-color: var(--sidebar-hover);
+      }
+
+      .sidebar-link {
+        color: var(--sidebar-text);
+        text-decoration: none;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        padding: 0.75rem 0;
+        transition: all var(--transition-speed) ease;
+      }
+
+      .sidebar-link i {
+        margin-right: 10px;
+        font-size: 1.2rem;
+        width: 25px;
+        text-align: center;
+      }
+
+      .sidebar-link:hover {
+        color: var(--primary-color);
+        transform: translateX(5px);
+      }
+
+      main {
+        flex-grow: 1;
+        margin-left: var(--sidebar-width);
+        padding: 40px;
+      }
+
+      .content {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 30px;
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .heading {
+        text-align: center;
+        margin-bottom: 30px;
+      }
+
+      h1 {
+        color: var(--primary-color);
+        font-family: "Poppins", sans-serif;
+        font-weight: 600;
+        margin-bottom: 10px;
+      }
+
+      form {
+        display: grid;
+        gap: 25px;
+      }
+
+      label {
+        font-weight: bold;
+        margin-bottom: 5px;
+        display: block;
+        color: var(--secondary-color);
+      }
+
+      input,
+      select {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        font-size: 16px;
+        transition: all 0.3s ease;
+      }
+
+      input:focus,
+      select:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+      }
+
+      button {
+        background-color: var(--primary-color);
+        color: white;
+        padding: 12px 20px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: bold;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      button:hover {
+        background-color: var(--secondary-color);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      button:active {
+        transform: translateY(0);
+        box-shadow: none;
+      }
+
+      .button-group {
+        display: flex;
+        justify-content: space-between;
+        gap: 20px;
+      }
+
+      .button-group button {
+        flex: 1;
+      }
+
+      button[type="reset"] {
+        background-color: var(--accent-color);
+      }
+
+      button[type="reset"]:hover {
+        background-color: #c0392b;
+      }
+
+      @media (max-width: 768px) {
+        body {
+          flex-direction: column;
+        }
+
+        .sidebar {
+          width: 100%;
+          height: auto;
+          position: static;
+        }
+
+        main {
+          margin-left: 0;
+          padding: 20px;
+        }
+
+        .button-group {
+          flex-direction: column;
+        }
+      }
+
+      select {
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%2334495e' viewBox='0 0 16 16'%3E%3Cpath d='M8 11.5l-5.5-5.5h11z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 10px center;
+        padding-right: 30px;
+      }
+
+      input[type="number"] {
+        appearance: textfield;
+        -moz-appearance: textfield;
+      }
+
+      input[type="number"]::-webkit-outer-spin-button,
+      input[type="number"]::-webkit-inner-spin-button {
+        appearance: none;
+        -webkit-appearance: none;
+        margin: 0;
+      }
+
+      @keyframes submitPulse {
+        0% {
+          box-shadow: 0 0 0 0 rgba(46, 204, 113, 0.4);
+        }
+        70% {
+          box-shadow: 0 0 0 10px rgba(46, 204, 113, 0);
+        }
+        100% {
+          box-shadow: 0 0 0 0 rgba(46, 204, 113, 0);
+        }
+      }
+
+      .submit-success {
+        animation: submitPulse 1.5s;
+      }
+    </style>
+  </head>
+  <body>
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <h2 class="sidebar-title">VAL</h2>
+      </div>
+      <nav>
+        <ul class="sidebar-list">
+          <li class="sidebar-item">
+            <a href="/html/map.html" class="sidebar-link"
+              ><i class="fas fa-map"></i>HeatMap</a
+            >
+          </li>
+          <li class="sidebar-item">
+            <a href="/html/home.html" class="sidebar-link">
+              <i class="fas fa-home"></i> Home
+            </a>
+          </li>
+
+          <li class="sidebar-item">
+            <a href="/html/contribute.html" class="sidebar-link">
+              <i class="fas fa-hands-helping"></i> Contribute Resources
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="/html/request.html" class="sidebar-link">
+              <i class="fas fa-hand-holding-heart"></i> Request Help
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="/html/volunteer.html" class="sidebar-link">
+              <i class="fas fa-user-friends"></i> Volunteer Registration
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="/html/ngo.html" class="sidebar-link">
+              <i class="fas fa-building"></i> NGO List
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="/html/dashboard.html" class="sidebar-link">
+              <i class="fas fa-tachometer-alt"></i> Dashboard
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+
+    <main>
+      <div class="content">
+        <div class="heading">
+          <h1>Donor Contribution Form</h1>
+          <p>
+            Please fill out the form below to contribute resources to a
+            disaster-affected location.
+          </p>
+        </div>
+        <form id="donorForm">
+          <div>
+            <label for="location">Select Location</label>
+            <input
+              type="text"
+              name="location"
+              id="location"
+              list="location-list"
+              placeholder="Enter or select a location"
+              required
+            />
+            <datalist id="location-list">
+              <option value="Adyar"></option>
+              <option value="Porur"></option>
+              <option value="Perambur"></option>
+              <option value="Chrompet"></option>
+              <option value="Royapuram"></option>
+              <option value="Tondiarpet"></option>
+              <option value="Anna Nagar"></option>
+              <option value="Velachery"></option>
+              <option value="T Nagar"></option>
+            </datalist>
+          </div>
+
+          <div>
+            <label for="resource">Select Resource</label>
+            <select id="resource" name="resource" required>
+              <option value="">Choose a resource</option>
+              <option value="food">Food</option>
+              <option value="medicine">Medicine</option>
+              <optgroup label="Other Supplies">
+                <option value="clothes">Clothes</option>
+                <option value="rescue_equipment">Rescue Equipment</option>
+                <option value="firstaid_box">FirstAid Box</option>
+                <option value="flashlight_tools">Flashlight and Tools</option>
+              </optgroup>
+            </select>
+          </div>
+
+          <div>
+            <label for="quantity">Number of Quantities</label>
+            <input
+              type="number"
+              name="quantity"
+              id="quantity"
+              min="1"
+              max="1000"
+              value="1"
+              required
+            />
+          </div>
+
+          <div class="button-group">
+            <button type="submit">Submit</button>
+            <button type="reset">Reset</button>
+          </div>
+        </form>
+      </div>
+    </main>
+    <script>
+      const express = require('express');
+    </script>
+    <script>
+      const currentPage = window.location.pathname;
+      const sidebarLinks = document.querySelectorAll(".sidebar-link");
+      sidebarLinks.forEach((link) => {
+        if (link.getAttribute("href") === currentPage) {
+          link.parentElement.classList.add("active");
+        }
+      });
+
+      document.getElementById("donorForm").addEventListener("submit", async function (e) {
+        e.preventDefault();
+        const formData = new FormData(this);
+        const donationData = Object.fromEntries(formData);
+        try {
+          const response = await fetch('http://127.0.0.1:8000/api/donate', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(donationData),
+          });
+    
+          if (response.ok) {
+            const submitButton = this.querySelector('button[type="submit"]');
+            submitButton.classList.add("submit-success");
+            submitButton.textContent = "Thank You!";
+            submitButton.style.backgroundColor = "var(--success-color)";
+    
+            setTimeout(() => {
+              alert("Thank you for your contribution!");
+              this.reset();
+              submitButton.classList.remove("submit-success");
+              submitButton.textContent = "Submit";
+              submitButton.style.backgroundColor = "";
+            }, 1500);
+          } else {
+            alert("Error submitting donation. Please try again.");
+          }
+        } catch (error) {
+          console.error('Error:', error);
+          alert("An error occurred. Please try again later.");
+        }
+      });
+    </script>
+  </body>
+</html>

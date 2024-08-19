@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="author" content="val" />
+  <meta name="description" content="This site helps to manage resources and volunteer activities during disasters" />
+  <link rel="icon" href="/img/valicon.jpg" type="image/x-icon" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <title>Val - Request Emergency Help</title>
+  <style>
+    :root {
+      --primary-color: #3498db;
+      --secondary-color: #2c3e50;
+      --background-color: #f4f7f9;
+      --text-color: #34495e;
+      --accent-color: #e74c3c;
+      --success-color: #2ecc71;
+      --sidebar-width: 250px;
+      --sidebar-background: #2c3e50;
+      --sidebar-text: #ecf0f1;
+      --sidebar-hover: #34495e;
+      --transition-speed: 0.3s;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "Poppins", sans-serif;
+      line-height: 1.6;
+      background-color: var(--background-color);
+      color: var(--text-color);
+      display: flex;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      width: var(--sidebar-width);
+      background-color: var(--sidebar-background);
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
+
+    .sidebar-header {
+      padding: 1.5rem;
+      background: linear-gradient(135deg,
+          var(--primary-color),
+          var(--secondary-color));
+      position: sticky;
+      top: 0;
+      z-index: 2;
+    }
+
+    .sidebar-title {
+      color: var(--sidebar-text);
+      font-size: 1.5rem;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin: 0;
+    }
+
+    .sidebar-list {
+      list-style-type: none;
+      padding: 1rem 0;
+    }
+
+    .sidebar-item {
+      padding: 0.5rem 1.5rem;
+      transition: background-color var(--transition-speed) ease;
+    }
+
+    .sidebar-item:hover {
+      background-color: var(--sidebar-hover);
+    }
+
+    .sidebar-link {
+      color: var(--sidebar-text);
+      text-decoration: none;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      padding: 0.75rem 0;
+      transition: all var(--transition-speed) ease;
+    }
+
+    .sidebar-link i {
+      margin-right: 10px;
+      font-size: 1.2rem;
+      width: 25px;
+      text-align: center;
+    }
+
+    main {
+      flex-grow: 1;
+      padding: 2rem;
+      margin-left: var(--sidebar-width);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .heading {
+      text-align: center;
+      margin-bottom: 2rem;
+      max-width: 800px;
+    }
+
+    h1 {
+      color: var(--primary-color);
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    form {
+      display: grid;
+      gap: 1.5rem;
+      background-color: white;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 600px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    label {
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: var(--secondary-color);
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      padding: 0.75rem;
+      border: 2px solid #e0e0e0;
+      border-radius: 6px;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 60px;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 1rem;
+    }
+
+    button {
+      background-color: var(--primary-color);
+      color: white;
+      padding: 0.875rem 1.5rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1.125rem;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      flex: 1;
+    }
+
+    button:hover {
+      background-color: var(--secondary-color);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .reset-btn {
+      background-color: var(--accent-color);
+    }
+
+    .reset-btn:hover {
+      background-color: #c0392b;
+    }
+
+    #location {
+      min-height: 80px;
+    }
+
+    @media (max-width: 1024px) {
+      body {
+        flex-direction: column;
+      }
+
+      .sidebar {
+        width: 100%;
+        height: auto;
+        position: static;
+      }
+
+      main {
+        margin-left: 0;
+        padding: 2rem 1rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <h2 class="sidebar-title">VAL</h2>
+    </div>
+    <nav>
+      <ul class="sidebar-list">
+        <li class="sidebar-item">
+          <a href="/html/map.html" class="sidebar-link">
+            <i class="fas fa-map"></i>
+            <span>HeatMap</span>
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a href="/html/home.html" class="sidebar-link">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a href="/html/contribute.html" class="sidebar-link">
+            <i class="fas fa-hands-helping"></i>
+            <span>Contribute Resources</span>
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a href="/html/request.html" class="sidebar-link">
+            <i class="fas fa-hand-holding-heart"></i>
+            <span>Request Help</span>
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a href="/html/volunteer.html" class="sidebar-link">
+            <i class="fas fa-user-friends"></i>
+            <span>Volunteer Registration</span>
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a href="/html/ngo.html" class="sidebar-link">
+            <i class="fas fa-building"></i>
+            <span>NGO List</span>
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a href="/html/dashboard.html" class="sidebar-link">
+            <i class="fas fa-tachometer-alt"></i>
+            <span>Dashboard</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </aside>
+
+  <main>
+    <div class="heading">
+      <h1>Request Emergency Help</h1>
+      <p>
+        Please provide detailed information about your emergency situation.
+      </p>
+    </div>
+    <form id="emergencyRequestForm">
+      <div class="form-group">
+        <label for="resource">Resource Needed</label>
+        <select id="resource" name="resource" required>
+          <option value="">Select a resource</option>
+          <option value="food">Food</option>
+          <option value="water">Water</option>
+          <option value="medicine">Medicine</option>
+          <option value="shelter">Shelter</option>
+          <option value="rescue">Rescue</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="location">Full Address</label>
+        <textarea id="location" name="location" rows="3" placeholder="Enter your full address" required></textarea>
+      </div>
+      <div class="form-group">
+        <label for="quantity">Quantity Required</label>
+        <input type="number" id="quantity" name="quantity" min="1" required />
+      </div>
+      <div class="form-group">
+        <label for="description">Description of the Situation</label>
+        <textarea id="description" name="description" rows="4" placeholder="Describe your emergency situation here"
+          required></textarea>
+      </div>
+      <div class="form-group">
+        <label for="peopleAffected">Number of People Affected</label>
+        <input type="number" id="peopleAffected" name="peopleAffected" min="1" required />
+      </div>
+      <div class="button-group">
+        <button type="submit">Submit Request</button>
+        <button type="reset" class="reset-btn">Reset Form</button>
+      </div>
+    </form>
+  </main>
+
+  <script>
+    document.getElementById("emergencyRequestForm").addEventListener("submit", async function (e) {
+      e.preventDefault();
+      const formData = new FormData(this);
+      const requestData = Object.fromEntries(formData.entries());
+
+      try {
+        const response = await fetch('http://127.0.0.1:8000/api/emergency-request', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(requestData),
+        });
+
+        if (response.ok) {
+          alert("Emergency request submitted successfully!");
+          this.reset();
+        } else {
+          const errorData = await response.json();
+          alert(`Error submitting request: ${errorData.message}`);
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert("An error occurred. Please try again later.");
+      }
+    });
+  </script>
+</body>
+
+</html>

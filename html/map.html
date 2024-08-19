@@ -1,0 +1,1300 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="author" content="val" />
+    <meta
+      name="description"
+      content="This site helps to manage resources and volunteer activities during disasters"
+    />
+    <link rel="icon" href="/img/valicon.jpg" type="image/x-icon" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <title>Disaster Management Platform</title>
+    <script src="https://api.tiles.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.js"></script>
+    <link
+      href="https://api.tiles.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+      }
+
+      #map {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 100%;
+      }
+
+      .filter-container {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        background: transparent;
+        padding: 0;
+        z-index: 11;
+      }
+
+      .checkbox-box {
+        background: transparent;
+        padding: 5px;
+        border-radius: 5px;
+        margin-bottom: 15px;
+      }
+
+      .checkbox-box label {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        font-size: 14px;
+        cursor: pointer;
+        padding: 5px;
+      }
+
+      .checkbox-box label input {
+        display: none;
+      }
+
+      .mapboxgl-popup-content {
+        max-width: 300px;
+      }
+
+      #analysis-results {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        max-width: 300px;
+        background: white;
+        padding: 10px;
+        border-radius: 5px;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+        z-index: 1000;
+        font-size: 14px;
+      }
+
+      .hidden {
+        display: none;
+      }
+
+      #map-controls {
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+        z-index: 1000;
+      }
+
+      #map-controls .mapboxgl-ctrl-group {
+        margin-bottom: 10px;
+      }
+
+      :root {
+        --primary-color: #3498db;
+        --secondary-color: #2c3e50;
+        --text-color: #333;
+        --background-color: #f4f4f4;
+        --sidebar-width: 250px;
+        --sidebar-background: #2c3e50;
+        --sidebar-text: #ecf0f1;
+        --sidebar-hover: #34495e;
+      }
+
+      * {
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        line-height: 1.6;
+        color: var(--text-color);
+        background-color: var(--background-color);
+      }
+
+      .sidebar {
+        width: var(--sidebar-width);
+        height: 100vh;
+        background-color: var(--sidebar-background);
+        position: fixed;
+        left: -250px;
+        top: 0;
+        transition: left 0.3s ease;
+        z-index: 1000;
+        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+      }
+
+      .sidebar.active {
+        left: 0;
+      }
+
+      .sidebar-header {
+        padding: 1rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid var(--sidebar-text);
+      }
+
+      .sidebar-title {
+        color: var(--sidebar-text);
+        font-size: 1.2rem;
+      }
+
+      .close-btn {
+        color: var(--sidebar-text);
+        font-size: 1.5rem;
+        cursor: pointer;
+        transition: color 0.3s ease;
+      }
+
+      .close-btn:hover {
+        color: var(--primary-color);
+      }
+
+      .sidebar-list {
+        list-style-type: none;
+        padding: 1rem 0;
+      }
+
+      .sidebar-item {
+        padding: 0.5rem 1.5rem;
+      }
+
+      .sidebar-link {
+        color: var(--sidebar-text);
+        text-decoration: none;
+        font-weight: 500;
+        display: block;
+        padding: 0.5rem 0;
+        transition: all 0.3s ease;
+      }
+
+      .sidebar-link:hover {
+        background-color: var(--sidebar-hover);
+        padding-left: 10px;
+      }
+
+      .toggle-btn {
+        position: fixed;
+        left: 1rem;
+        top: 1rem;
+        font-size: 1.5rem;
+        color: var(--secondary-color);
+        cursor: pointer;
+        z-index: 999;
+        background: none;
+        border: none;
+        padding: 0.5rem;
+        transition: color 0.3s ease;
+        left: 120px;
+      }
+
+      .toggle-btn:hover {
+        color: var(--primary-color);
+      }
+
+      main {
+        padding: 2rem;
+        margin-left: 0;
+        transition: margin-left 0.3s ease;
+      }
+
+      main.active {
+        margin-left: var(--sidebar-width);
+      }
+
+      .hero {
+        text-align: center;
+        padding: 4rem 0;
+        background: linear-gradient(
+          135deg,
+          var(--primary-color),
+          var(--secondary-color)
+        );
+        color: #fff;
+      }
+
+      .hero h1 {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+      }
+
+      .hero p {
+        font-size: 1.2rem;
+        max-width: 600px;
+        margin: 0 auto;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+      }
+
+      @media (max-width: 768px) {
+        main.active {
+          margin-left: 0;
+        }
+      }
+
+      :root {
+        --primary-color: #3498db;
+        --secondary-color: #2c3e50;
+        --text-color: #333;
+        --background-color: #f4f4f4;
+        --sidebar-width: 250px;
+        --sidebar-background: #2c3e50;
+        --sidebar-text: #ecf0f1;
+        --sidebar-hover: #34495e;
+        --transition-speed: 0.3s;
+      }
+
+      .sidebar {
+        width: var(--sidebar-width);
+        height: 100vh;
+        background-color: var(--sidebar-background);
+        position: fixed;
+        left: calc(-1 * var(--sidebar-width));
+        top: 0;
+        transition: all var(--transition-speed) ease;
+        z-index: 1000;
+        box-shadow: 2px 0 15px rgba(0, 0, 0, 0.1);
+        overflow-y: auto;
+      }
+
+      .sidebar.active {
+        left: 0;
+      }
+
+      .sidebar-header {
+        padding: 1.5rem;
+        background: linear-gradient(
+          135deg,
+          var(--primary-color),
+          var(--secondary-color)
+        );
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .sidebar-title {
+        color: var(--sidebar-text);
+        font-size: 1.5rem;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+      }
+
+      .close-btn {
+        color: var(--sidebar-text);
+        font-size: 1.8rem;
+        cursor: pointer;
+        transition: transform var(--transition-speed) ease;
+      }
+
+      .close-btn:hover {
+        transform: rotate(90deg);
+      }
+
+      .sidebar-list {
+        list-style-type: none;
+        padding: 1rem 0;
+      }
+
+      .sidebar-item {
+        padding: 0.5rem 1.5rem;
+        transition: background-color var(--transition-speed) ease;
+      }
+
+      .sidebar-item:hover {
+        background-color: var(--sidebar-hover);
+      }
+
+      .sidebar-link {
+        color: var(--sidebar-text);
+        text-decoration: none;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        padding: 0.75rem 0;
+        transition: all var(--transition-speed) ease;
+      }
+
+      .sidebar-link i {
+        margin-right: 10px;
+        font-size: 1.2rem;
+        width: 25px;
+        text-align: center;
+      }
+
+      .sidebar-link:hover {
+        color: var(--primary-color);
+        transform: translateX(5px);
+      }
+
+      .toggle-btn {
+        position: fixed;
+        left: 1.9rem;
+        top: 1rem;
+        font-size: 1.5rem;
+        color: var(--secondary-color);
+        cursor: pointer;
+        z-index: 999;
+        background: rgba(255, 255, 255, 0.8);
+        border: none;
+        padding: 0.5rem;
+        border-radius: 0;
+        /* Changed from 50% to 0 */
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        transition: all var(--transition-speed) ease;
+        opacity: 0.89;
+      }
+
+      .toggle-btn:hover {
+        color: var(--primary-color);
+        transform: scale(1.1);
+      }
+
+      @media (max-width: 768px) {
+        .sidebar {
+          width: 100%;
+          left: -100%;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .sidebar {
+          width: 100%;
+          left: -100%;
+        }
+
+        .toggle-btn {
+          z-index: 1001;
+          /* Ensure it's above the sidebar */
+        }
+      }
+
+      .strip {
+        width: 105px;
+        height: 100vh;
+        background-color: whitesmoke;
+        opacity: 0.79;
+        z-index: 10;
+        position: absolute;
+        left: 0;
+        top: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .checkbox-box label i {
+        font-size: 24px;
+        margin-bottom: 5px;
+        color: #888;
+        transition: color 0.3s ease, border-color 0.3s ease;
+        border: 2px solid #888;
+        border-radius: 21%;
+        padding: 10px;
+      }
+
+      .checkbox-box label span {
+        font-weight: bold;
+      }
+
+      .checkbox-box label input:checked + i {
+        color: #3498db;
+        border-color: #3498db;
+      }
+
+      .checkbox-box label:hover i {
+        color: #3498db;
+        border-color: #3498db;
+      }
+    
+
+      #close-modal:hover {
+        background-color: #2980b9;
+      }
+      .alert-overlay {
+        display: none;
+        position: fixed;
+        z-index: 9999;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .alert-content {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 5px;
+        max-width: 400px;
+        text-align: center;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      .alert-overlay {
+        background-color: rgba(0, 0, 0, 0.7);
+      }
+
+      .alert-content {
+        background-color: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        max-width: 450px;
+        width: 90%;
+        padding: 30px;
+        text-align: center;
+        font-family: "Arial", sans-serif;
+      }
+
+      .alert-content h2 {
+        color: #3498db;
+        margin-top: 0;
+        margin-bottom: 20px;
+        font-size: 24px;
+      }
+      #close-alert {
+        background-color: #3498db;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        margin-top: 15px;
+      }
+
+      #close-alert:hover {
+        background-color: #2980b9;
+      }
+
+      /* Ensure map controls stay on top */
+      .mapboxgl-control-container {
+        z-index: 10000;
+      }
+      
+      .alert-content p {
+        color: #333;
+        line-height: 1.6;
+        margin-bottom: 25px;
+      }
+
+      .alert-content button {
+        background-color: #3498db;
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        transition: background-color 0.3s ease;
+      }
+
+      .alert-content button:hover {
+        background-color: #2980b9;
+      }
+      #heatmap-alert.alert-overlay {
+        background-color: transparent;
+        pointer-events: none;
+      }
+
+      #heatmap-alert .alert-content {
+        pointer-events: auto;
+        background-color: rgba(255, 255, 255, 0.9);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      }
+    </style>
+  </head>
+
+  <body>
+    <button class="toggle-btn" id="toggleSidebar">
+      <i class="fas fa-bars"></i>
+    </button>
+
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <h2 class="sidebar-title">VAL</h2>
+        <span class="close-btn" id="closeSidebar">&times;</span>
+      </div>
+      <nav>
+        <li class="sidebar-item">
+          <a href="/html/map.html" class="sidebar-link">
+            <i class="fas fa-map"></i> HeatMap
+          </a>
+        </li>
+        <ul class="sidebar-list">
+          <li class="sidebar-item">
+            <a href="/html/home.html" class="sidebar-link"
+              ><i class="fas fa-home"></i> Home</a
+            >
+          </li>
+
+          <li class="sidebar-item">
+            <a href="/html/contribute.html" class="sidebar-link"
+              ><i class="fas fa-hands-helping"></i> Contribute Resources</a
+            >
+          </li>
+          <li class="sidebar-item">
+            <a href="/html/request.html" class="sidebar-link"
+              ><i class="fas fa-hand-holding-heart"></i> Request Help</a
+            >
+          </li>
+          <li class="sidebar-item">
+            <a href="/html/volunteer.html" class="sidebar-link"
+              ><i class="fas fa-user-friends"></i> Volunteer Registration</a
+            >
+          </li>
+          <li class="sidebar-item">
+            <a href="/html/ngo.html" class="sidebar-link"
+              ><i class="fas fa-building"></i> NGO List</a
+            >
+          </li>
+          <li class="sidebar-item">
+            <a href="/html/dashboard.html" class="sidebar-link"
+              ><i class="fas fa-tachometer-alt"></i> Dashboard</a
+            >
+          </li>
+        </ul>
+      </nav>
+    </aside>
+    <div id="map"></div>
+    <div class="strip">
+      <div class="filter-container">
+        <div class="checkbox-box">
+          <label>
+            <input type="checkbox" id="damage-analysis" />
+            <i class="fas fa-chart-area"></i>
+            <span>Damage Analysis</span>
+          </label>
+        </div>
+        <div class="checkbox-box">
+          <label>
+            <input type="checkbox" value="food" checked />
+            <i class="fas fa-utensils"></i>
+            <span>Food</span>
+          </label>
+        </div>
+        <div class="checkbox-box">
+          <label>
+            <input type="checkbox" value="meds" checked />
+            <i class="fas fa-pills"></i>
+            <span>Meds</span>
+          </label>
+        </div>
+        <div class="checkbox-box">
+          <label>
+            <input type="checkbox" value="supplies" checked />
+            <i class="fas fa-box-open"></i>
+            <span>Supplies</span>
+          </label>
+        </div>
+        <div class="checkbox-box">
+          <label>
+            <input type="checkbox" value="Damage Report" checked />
+            <i class="fas fa-exclamation-triangle"></i>
+            <span>Damage Report</span>
+          </label>
+        </div>
+      </div>
+    </div>
+    <div id="analysis-results" class="checkbox-box"></div>
+    <div id="map-controls"></div>
+
+    <script>
+      function isFirstVisit() {
+        if (!localStorage.getItem("hasVisitedBefore")) {
+          localStorage.setItem("hasVisitedBefore", "true");
+          return true;
+        }
+        return false;
+      }
+      const toggleBtn = document.getElementById("toggleSidebar");
+      const closeBtn = document.getElementById("closeSidebar");
+      const sidebar = document.getElementById("sidebar");
+      const main = document.getElementById("main");
+      const sidebarItems = document.querySelectorAll(".sidebar-item");
+
+      function toggleSidebar(e) {
+        e.stopPropagation(); // Prevent event from bubbling up
+        sidebar.classList.toggle("active");
+        main.classList.toggle("active");
+
+        if (sidebar.classList.contains("active")) {
+          animateSidebarItems();
+        }
+      }
+
+      function animateSidebarItems() {
+        sidebarItems.forEach((item, index) => {
+          item.style.opacity = "0";
+          item.style.transform = "translateX(-20px)";
+          setTimeout(() => {
+            item.style.transition = `all 0.3s ease ${index * 0.1}s`;
+            item.style.opacity = "1";
+            item.style.transform = "translateX(0)";
+          }, 50);
+        });
+      }
+
+      toggleBtn.addEventListener("click", toggleSidebar);
+      closeBtn.addEventListener("click", toggleSidebar);
+
+      // Close sidebar when clicking outside
+      document.addEventListener("click", (e) => {
+        if (!sidebar.contains(e.target) && e.target !== toggleBtn) {
+          sidebar.classList.remove("active");
+          main.classList.remove("active");
+        }
+      });
+
+      // Prevent sidebar from closing when clicking inside it
+      sidebar.addEventListener("click", (e) => {
+        e.stopPropagation();
+      });
+
+      // Add active class to current page
+      const currentPage = window.location.pathname;
+      const sidebarLinks = document.querySelectorAll(".sidebar-link");
+      sidebarLinks.forEach((link) => {
+        if (link.getAttribute("href") === currentPage) {
+          link.parentElement.classList.add("active");
+        }
+      });
+    </script>
+    <script>
+      mapboxgl.accessToken =
+        "pk.eyJ1Ijoic29tZWh3YXItMDkwMyIsImEiOiJjbHlzaHppMTYwNmtqMmxxc2J2ZWV3amRiIn0.DXZSuWbI4rUZds6XjStwAg";
+      const map = new mapboxgl.Map({
+        container: "map",
+        style: "mapbox://styles/mapbox/streets-v11",
+        center: [13.0665,80.252],
+        zoom: 0.5,
+        projection: "globe",
+      });
+
+      map.on("style.load", () => {0
+        map.setFog({}); // Set the default atmosphere style
+      });
+
+      const mapControls = document.getElementById("map-controls");
+
+      function centerMapOnUserLocation() {
+        if ("geolocation" in navigator) {
+          navigator.geolocation.getCurrentPosition(
+            (position) => {
+              const { longitude, latitude } = position.coords;
+              map.flyTo({
+                center: [longitude, latitude],
+                zoom: 12, // You can adjust this zoom level
+              });
+            },
+            (error) => {
+              console.error("Error getting user location:", error);
+            }
+          );
+        } else {
+          console.log("Geolocation is not available in this browser.");
+        }
+      }
+
+      // Create the NavigationControl
+      const nav = new mapboxgl.NavigationControl();
+
+      // Create the GeolocateControl
+      const geolocate = new mapboxgl.GeolocateControl({
+        positionOptions: {
+          enableHighAccuracy: true,
+        },
+        trackUserLocation: true,
+        showUserHeading: true,
+      });
+
+      // Add the controls to the custom container
+      mapControls.appendChild(nav.onAdd(map));
+      mapControls.appendChild(geolocate.onAdd(map));
+
+      const categories = [
+        "food",
+        "meds",
+        "supplies",
+        "Damage Report",
+        "Related",
+      ];
+
+      const layerIds = categories.map(
+        (category) => `${category.toLowerCase()}-heat`
+      );
+
+      function getDamageLevel(intensity) {
+        if (intensity >= 30)
+          return {
+            level: "Catastrophic",
+            color: "#800000",
+            description:
+              "Extreme and widespread damage, immediate emergency response required",
+          };
+        if (intensity >= 25)
+          return {
+            level: "Severe",
+            color: "#FF0000",
+            description: "Major damage, urgent assistance needed",
+          };
+        if (intensity >= 20)
+          return {
+            level: "Critical",
+            color: "#FF4500",
+            description: "Significant damage, prompt action required",
+          };
+        if (intensity >= 15)
+          return {
+            level: "High",
+            color: "#FFA500",
+            description: "Considerable damage, prioritized response necessary",
+          };
+        if (intensity >= 10)
+          return {
+            level: "Moderate",
+            color: "#FFD700",
+            description: "Noticeable damage, attention required",
+          };
+        if (intensity >= 5)
+          return {
+            level: "Low",
+            color: "#ADFF2F",
+            description: "Minor damage, monitoring advised",
+          };
+        return {
+          level: "Minimal",
+          color: "#00FF00",
+          description: "Little to no damage, routine assessment",
+        };
+      }
+
+      function getCategoriesFromFeature(feature) {
+        const cats = feature.properties.categories;
+        let categories = [];
+        if (Array.isArray(cats)) {
+          categories = cats;
+        } else if (typeof cats === "string") {
+          categories = cats.replace(/[\[\]"']/g, "").split(",");
+        }
+        categories = categories.map((c) => c.trim()).filter((c) => c);
+        if (
+          categories.length === 0 ||
+          (categories.length === 1 && categories[0] === "Related")
+        ) {
+          categories.push("Related");
+        }
+        return [...new Set(categories)];
+      }
+
+      async function updateMapData() {
+        try {
+          const response = await fetch("http://127.0.0.1:8000/api/geojson");
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+          const data = await response.json();
+          map.getSource("Requests").setData(data);
+        } catch (error) {
+          console.error("Error fetching map data:", error);
+        }
+      }
+
+      map.on("load", () => {
+        map.addSource("Requests", {
+          type: "geojson",
+          data: "http://127.0.0.1:8000/api/geojson",
+        });
+
+        centerMapOnUserLocation();
+
+        categories.forEach((category) => {
+          const layerId = `${category.toLowerCase()}-heat`;
+
+          map.addLayer({
+            id: layerId,
+            type: "heatmap",
+            source: "Requests",
+            maxzoom: 15,
+            paint: {
+              "heatmap-weight": [
+                "interpolate",
+                ["linear"],
+                ["get", "intensity"],
+                0,
+                0,
+                20,
+                1,
+              ],
+              "heatmap-intensity": [
+                "interpolate",
+                ["linear"],
+                ["zoom"],
+                11,
+                1,
+                15,
+                3,
+              ],
+              "heatmap-color": [
+                "interpolate",
+                ["linear"],
+                ["heatmap-density"],
+                0,
+                "rgba(0, 255, 255, 0)", // Transparent cyan for lowest density
+                0.2,
+                "rgba(0, 255, 255, 0.1)", // Light cyan
+                0.4,
+                "rgba(0, 255, 255,0.1)", // Cyan
+                0.6,
+                "rgba(255, 255, 0,1)", // Yellow
+                0.8,
+                "rgba(255, 128, 0,1)", // Orange
+                1,
+                "rgba(255, 0, 0,1)", // Red for highest density
+              ],
+              "heatmap-radius": [
+                "interpolate",
+                ["linear"],
+                ["zoom"],
+                11,
+                20,
+                15,
+                20,
+              ],
+              "heatmap-opacity": [
+                "interpolate",
+                ["linear"],
+                ["zoom"],
+                14,
+                1,
+                15,
+                0,
+              ],
+            },
+            filter: ["in", category, ["get", "categories"]],
+          });
+
+          map.addLayer({
+            id: `${category.toLowerCase()}-point`,
+            type: "circle",
+            source: "Requests",
+            minzoom: 14,
+            paint: {
+              "circle-radius": [
+                "interpolate",
+                ["exponential", 2],
+                ["zoom"],
+                15,
+                ["interpolate", ["linear"], ["get", "intensity"], 1, 5, 20, 10],
+                22,
+                [
+                  "interpolate",
+                  ["linear"],
+                  ["get", "intensity"],
+                  1,
+                  20,
+                  20,
+                  50,
+                ],
+              ],
+              "circle-color": [
+                "interpolate",
+                ["linear"],
+                ["get", "intensity"],
+                0,
+                "rgba(236,222,239,0)",
+                5,
+                "rgb(236,222,239)",
+                10,
+                "rgb(208,209,230)",
+                15,
+                "rgb(166,189,219)",
+                20,
+                "rgb(103,169,207)",
+                25,
+                "rgb(28,144,153)",
+                30,
+                "rgb(1,108,89)",
+              ],
+              "circle-stroke-color": "white",
+              "circle-stroke-width": 1,
+              "circle-opacity": [
+                "interpolate",
+                ["linear"],
+                ["zoom"],
+                14,
+                0,
+                15,
+                1,
+              ],
+            },
+            filter: ["in", category, ["get", "categories"]],
+          });
+        });
+
+        function updateFilters() {
+          const checkedCategories = Array.from(
+            document.querySelectorAll(
+              ".filter-container input:not(#damage-analysis):checked"
+            )
+          ).map((cb) => cb.value);
+
+          categories.forEach((category) => {
+            const layerId = `${category.toLowerCase()}-heat`;
+            const pointLayerId = `${category.toLowerCase()}-point`;
+            const visibility =
+              checkedCategories.includes(category) ||
+              (category === "Related" &&
+                document.getElementById("damage-analysis").checked)
+                ? "visible"
+                : "none";
+
+            map.setLayoutProperty(layerId, "visibility", visibility);
+            map.setLayoutProperty(pointLayerId, "visibility", visibility);
+          });
+
+          const analysisResultsDiv =
+            document.getElementById("analysis-results");
+          if (document.getElementById("damage-analysis").checked) {
+            analysisResultsDiv.classList.remove("hidden");
+            performDamageAnalysis(checkedCategories);
+          } else {
+            analysisResultsDiv.classList.add("hidden");
+            analysisResultsDiv.innerHTML = "";
+          }
+        }
+
+        function performDamageAnalysis(checkedCategories) {
+          const features = map.querySourceFeatures("Requests");
+          let totalRequests = 0;
+          const categoryCount = {
+            food: 0,
+            meds: 0,
+            supplies: 0,
+            "Damage Report": 0,
+            Related: 0,
+          };
+          let totalIntensity = 0;
+
+          features.forEach((feature) => {
+            const featureCategories = getCategoriesFromFeature(feature);
+            const relevantCategories = featureCategories.filter(
+              (cat) => checkedCategories.includes(cat) || cat === "Related"
+            );
+
+            if (relevantCategories.length > 0) {
+              totalRequests++;
+              totalIntensity += feature.properties.intensity || 0;
+
+              relevantCategories.forEach((category) => {
+                if (categoryCount.hasOwnProperty(category)) {
+                  categoryCount[category]++;
+                }
+              });
+            }
+          });
+
+          const averageIntensity =
+            totalRequests > 0 ? totalIntensity / totalRequests : 0;
+          const overallDamageAssessment = getDamageLevel(averageIntensity);
+
+          let analysisHTML = `<strong>Total Requests: ${totalRequests}</strong><br>`;
+          analysisHTML += `<strong>Average Intensity: ${averageIntensity.toFixed(
+            2
+          )}</strong><br>`;
+          analysisHTML += `<strong>Overall Damage Level: <span style="color:${overallDamageAssessment.color}">${overallDamageAssessment.level}</span></strong><br>`;
+          analysisHTML += `<em>${overallDamageAssessment.description}</em><br><br>`;
+          analysisHTML += `<strong>Category Breakdown:</strong><br>`;
+          for (const [category, count] of Object.entries(categoryCount)) {
+            if (
+              checkedCategories.includes(category) ||
+              category === "Related"
+            ) {
+              analysisHTML += `${category}: ${count}<br>`;
+            }
+          }
+
+          document.getElementById("analysis-results").innerHTML = analysisHTML;
+        }
+
+        document
+          .querySelectorAll(".filter-container input")
+          .forEach((checkbox) => {
+            checkbox.addEventListener("change", () => {
+              if (checkbox.id === "damage-analysis") {
+                if (checkbox.checked) {
+                  document
+                    .querySelectorAll(
+                      ".filter-container input:not(#damage-analysis)"
+                    )
+                    .forEach((cb) => {
+                      cb.checked = true;
+                    });
+                }
+              }
+              updateFilters();
+            });
+          });
+
+        updateFilters();
+
+        function addClickInteraction() {
+          map.on("click", (e) => {
+            if (map.getZoom() >= 14) return;
+
+            const features = map.queryRenderedFeatures(e.point, {
+              layers: layerIds,
+            });
+
+            if (features.length > 0) {
+              const categoryData = {
+                food: { count: 0, totalIntensity: 0 },
+                meds: { count: 0, totalIntensity: 0 },
+                supplies: { count: 0, totalIntensity: 0 },
+                "Damage Report": { count: 0, totalIntensity: 0 },
+                Related: { count: 0, totalIntensity: 0 },
+              };
+
+              features.forEach((feature) => {
+                const featureCategories = getCategoriesFromFeature(feature);
+                const intensity = feature.properties.intensity || 0;
+                featureCategories.forEach((category) => {
+                  if (categoryData[category]) {
+                    categoryData[category].count++;
+                    categoryData[category].totalIntensity += intensity;
+                  }
+                });
+              });
+
+              const categoryInfo = Object.entries(categoryData)
+                .map(([category, data]) => ({
+                  category,
+                  count: data.count,
+                  avgIntensity:
+                    data.count > 0 ? data.totalIntensity / data.count : 0,
+                }))
+                .filter((info) => info.count > 0);
+
+              const overallIntensity =
+                categoryInfo.reduce((sum, info) => sum + info.avgIntensity, 0) /
+                categoryInfo.length;
+              const damageAssessment = getDamageLevel(overallIntensity);
+
+              let popupContent = `
+                <h3>Damage Analysis</h3>
+                <p><strong>Overall Intensity:</strong> ${overallIntensity.toFixed(
+                  2
+                )}</p>
+                <p><strong>Damage Level:</strong> <span style="color:${
+                  damageAssessment.color
+                }">${damageAssessment.level}</span></p>
+                <p><em>${damageAssessment.description}</em></p>
+                <h4>Category Breakdown:</h4>
+              `;
+
+              categoryInfo.forEach((info) => {
+                const categoryDamage = getDamageLevel(info.avgIntensity);
+                popupContent += `
+                  <p>
+                    <strong>${info.category}:</strong> ${info.count} requests 
+                    <br>Avg Intensity: ${info.avgIntensity.toFixed(2)} 
+                    <br>Level: <span style="color:${categoryDamage.color}">${
+                  categoryDamage.level
+                }</span>
+                  </p>
+                `;
+              });
+
+              new mapboxgl.Popup()
+                .setLngLat(e.lngLat)
+                .setHTML(popupContent)
+                .addTo(map);
+            }
+          });
+
+          layerIds.forEach((layerId) => {
+            const pointLayerId = layerId.replace("-heat", "-point");
+            map.on("click", pointLayerId, (e) => {
+              const feature = e.features[0];
+              const intensity = feature.properties.intensity || 0;
+              const damageAssessment = getDamageLevel(intensity);
+              const categories = getCategoriesFromFeature(feature).join(", ");
+
+              let popupContent = `
+        <h3>Point Information</h3>
+        <p><strong>Categories:</strong> ${categories}</p>
+      `;
+
+              if (intensity > 0) {
+                popupContent += `
+          <p><strong>Intensity:</strong> ${intensity}</p>
+          <p><strong>Damage Level:</strong> <span style="color:${damageAssessment.color}">${damageAssessment.level}</span></p>
+          <p><em>${damageAssessment.description}</em></p>
+        `;
+              }
+
+              if (feature.properties.damagedescription) {
+                popupContent += `<p><strong>Damage Description:</strong> ${feature.properties.damagedescription}</p>`;
+              }
+
+              if (feature.properties.description) {
+                popupContent += `<p><strong>Description:</strong> ${feature.properties.description}</p>`;
+              }
+
+              new mapboxgl.Popup()
+                .setLngLat(e.lngLat)
+                .setHTML(popupContent)
+                .addTo(map);
+            });
+
+            map.on("mouseenter", pointLayerId, () => {
+              map.getCanvas().style.cursor = "pointer";
+            });
+            map.on("mouseleave", pointLayerId, () => {
+              map.getCanvas().style.cursor = "";
+            });
+          });
+        }
+
+        addClickInteraction();
+      });
+
+      document.getElementById("analysis-results").classList.add("hidden");
+
+      document.addEventListener("DOMContentLoaded", function () {
+        const welcomeAlert = document.getElementById("welcome-alert");
+        const closeWelcomeButton = document.getElementById("close-alert");
+        const heatmapAlert = document.getElementById("heatmap-alert");
+        const closeHeatmapButton = document.getElementById(
+          "close-heatmap-alert"
+        );
+        const sidebarAlert = document.getElementById("sidebar-alert");
+        const closeSidebarButton = document.getElementById(
+          "close-sidebar-alert"
+        );
+        const map = document.getElementById("map");
+        const toggleBtn = document.getElementById("toggleSidebar");
+
+        function hasSeenAlerts() {
+          return sessionStorage.getItem("hasSeenAlerts") === "true";
+        }
+
+        function markAlertsAsSeen() {
+          sessionStorage.setItem("hasSeenAlerts", "true");
+        }
+
+        if (!hasSeenAlerts()) {
+          // Show the welcome alert when the page loads for the first time in this session
+          welcomeAlert.style.display = "flex";
+          map.style.display = "none"; // Hide the map initially
+
+          // Close the welcome alert, show the map, and then show the heatmap alert after 400ms
+          closeWelcomeButton.onclick = function () {
+            welcomeAlert.style.display = "none";
+            map.style.display = "block"; // Show the map
+
+            // Trigger a resize event to ensure the map renders correctly
+            window.dispatchEvent(new Event("resize"));
+
+            // Show the heatmap alert after a 400ms delay
+            setTimeout(() => {
+              heatmapAlert.style.display = "flex";
+            }, 400);
+          };
+
+          // Close the heatmap alert and show the sidebar alert with zoom effect
+          closeHeatmapButton.onclick = function () {
+            heatmapAlert.style.display = "none";
+
+            // Zoom in to the sidebar icon
+            toggleBtn.style.transition = "all 0.5s ease-in-out";
+            toggleBtn.style.transform = "scale(3)";
+            toggleBtn.style.zIndex = "10000";
+
+            // Show the sidebar alert after zooming in
+            setTimeout(() => {
+              sidebarAlert.style.display = "flex";
+            }, 600);
+          };
+
+          // Close the sidebar alert and zoom out
+          closeSidebarButton.onclick = function () {
+            sidebarAlert.style.display = "none";
+
+            // Zoom out from the sidebar icon
+            toggleBtn.style.transform = "scale(1)";
+            setTimeout(() => {
+              toggleBtn.style.zIndex = "999";
+              toggleBtn.style.transition = "none";
+            }, 500);
+
+            // Mark alerts as seen after closing the last alert
+            markAlertsAsSeen();
+          };
+        } else {
+          // If alerts have been seen in this session, just show the map
+          welcomeAlert.style.display = "none";
+          heatmapAlert.style.display = "none";
+          sidebarAlert.style.display = "none";
+          map.style.display = "block";
+        }
+      });
+    </script>
+    <div id="welcome-alert" class="alert-overlay">
+      <div class="alert-content">
+        <h2>Welcome to VAL</h2>
+        <p>
+          VAL is your comprehensive disaster management platform. We're here to
+          provide critical support and resources during emergencies, ensuring
+          you have the assistance you need when it matters most.
+        </p>
+        <button id="close-alert">Continue</button>
+      </div>
+    </div>
+
+    <div id="heatmap-alert" class="alert-overlay" style="display: none">
+      <div class="alert-content">
+        <h2>Understanding the Heatmap</h2>
+        <p>
+          Our interactive heatmap visualizes disaster-affected areas and their
+          specific needs. Areas with brighter colors indicate higher urgency or
+          a greater concentration of assistance requests. Use this tool to
+          quickly assess and respond to critical situations.
+        </p>
+        <button id="close-heatmap-alert">Explore Map</button>
+      </div>
+    </div>
+    <div id="sidebar-alert" class="alert-overlay" style="display: none">
+      <div class="alert-content">
+        <h2>Navigate with Ease</h2>
+        <p>
+          Click on the sidebar icon to access different sections of VAL. Here
+          you can contribute resources, request help, or register as a
+          volunteer.
+        </p>
+        <button id="close-sidebar-alert">Got it</button>
+      </div>
+    </div>
+  </body>
+</html>
