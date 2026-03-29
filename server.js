@@ -32,7 +32,7 @@ pythonProcess.stderr.on('data', (data) => {
 });
 
 const runPythonScript = (scriptName) => {
-  const pythonProcess = spawn('python', [`D:/projects/VALpython/${scriptName}`]);
+  const pythonProcess = spawn('python', [`C:/projects/VALpython/${scriptName}`]);
   
   pythonProcess.stdout.on('data', (data) => {
     console.log(`Python stdout (${scriptName}): ${data}`);

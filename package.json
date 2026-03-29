@@ -8,24 +8,25 @@
         "dev": "nodemon server.js"
     },
     "dependencies": {
-        "@google-cloud/speech": "^4.10.0",
+        "@google-cloud/speech": "^7.3.0",
         "@googlemaps/google-maps-services-js": "^3.3.16",
-        "axios": "^0.27.2",
+        "axios": "^1.14.0",
         "body-parser": "^1.20.0",
         "child_process": "^1.0.2",
         "core-js": "^3.37.1",
         "cors": "^2.8.5",
         "dotenv": "^16.0.1",
         "express": "^4.18.1",
-        "firebase-admin": "^10.2.0",
+        "firebase-admin": "^13.7.0",
         "mongodb": "^4.6.0",
         "ngrok": "^5.0.0-beta.2",
+        "node-forge": "^1.4.0",
         "node-schedule": "^2.1.1",
         "path": "^0.12.7",
         "portfinder": "^1.0.32",
-        "twilio": "^3.77.1"
+        "twilio": "^5.13.1"
     },
     "devDependencies": {
-        "nodemon": "^2.0.16"
+        "nodemon": "^3.1.14"
     }
 }
